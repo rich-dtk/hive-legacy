@@ -1,0 +1,108 @@
+---
+name: hdfs-yarn-hive2
+dsl_version: 0.9.1
+node_bindings:
+  master: centos6.4-medium
+  slave1: centos6.4-medium
+  slave2: centos6.4-medium
+  slave3: centos6.4-medium
+  slave4: centos6.4-medium
+assembly:
+  attributes:
+    dtk_dns_enabled: true
+  nodes:
+    master:
+      attributes:
+        puppet_version: 2.7.25
+      components:
+      - hive
+      - bigtop_base
+      - base
+      - hadoop::namenode
+      - hadoop::resourcemanager
+      - hadoop::historyserver
+      - mysql::server:
+          attributes:
+            root_password: hive545
+    slave1:
+      attributes:
+        puppet_version: 2.7.25
+      components:
+      - bigtop_base
+      - base
+      - hadoop::datanode:
+          component_links:
+            namenode_conn: master/hadoop::namenode
+      - hadoop::nodemanager:
+          component_links:
+            resourcemanager_conn: master/hadoop::resourcemanager
+    slave2:
+      attributes:
+        puppet_version: 2.7.25
+      components:
+      - bigtop_base
+      - base
+      - hadoop::datanode:
+          component_links:
+            namenode_conn: master/hadoop::namenode
+      - hadoop::nodemanager:
+          component_links:
+            resourcemanager_conn: master/hadoop::resourcemanager
+    slave3:
+      attributes:
+        puppet_version: 2.7.25
+      components:
+      - bigtop_base
+      - base
+      - hadoop::datanode:
+          component_links:
+            namenode_conn: master/hadoop::namenode
+      - hadoop::nodemanager:
+          component_links:
+            resourcemanager_conn: master/hadoop::resourcemanager
+    slave4:
+      attributes:
+        puppet_version: 2.7.25
+      components:
+      - bigtop_base
+      - base
+      - hadoop::datanode:
+          component_links:
+            namenode_conn: master/hadoop::namenode
+      - hadoop::nodemanager:
+          component_links:
+            resourcemanager_conn: master/hadoop::resourcemanager
+workflow:
+  assembly_action: create
+  subtask_order: sequential
+  subtasks:
+  - name: initialize
+    nodes: All_applicable
+    ordered_components:
+    - base
+    - bigtop_base
+  - name: master hdfs
+    node: master
+    ordered_components:
+    - hadoop::namenode
+  - name: slaves hdfs
+    nodes: All_applicable
+    ordered_components:
+    - hadoop::datanode
+  - name: master yarn
+    node: master
+    ordered_components:
+    - hadoop::resourcemanager
+    - hadoop::historyserver
+  - name: slaves yarn
+    nodes: All_applicable
+    ordered_components:
+    - hadoop::nodemanager
+  - name: stage_mysql::server
+    node: master
+    ordered_components:
+    - mysql::server
+  - name: stage_hive
+    node: master
+    ordered_components:
+    - hive

@@ -1,0 +1,19 @@
+{
+  "component_modules": {
+    "bigtop_base": {
+      "remote_namespace": "bigtop"
+    },
+    "hadoop": {
+      "remote_namespace": "bigtop"
+    },
+    "java": {
+      "remote_namespace": "puppetlabs"
+    },
+    "mysql": {
+      "remote_namespace": "puppetlabs"
+    },
+    "stdlib": {
+      "remote_namespace": "puppetlabs"
+    }
+  }
+}

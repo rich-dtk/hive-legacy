@@ -1,0 +1,12 @@
+---
+component_modules:
+  bigtop_base:
+    namespace: bigtop
+  hadoop:
+    namespace: bigtop
+  java:
+    namespace: puppetlabs
+  mysql:
+    namespace: puppetlabs
+  stdlib:
+    namespace: puppetlabs
